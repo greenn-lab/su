@@ -1,6 +1,3 @@
-const PRINT_PATTERN: RegExp = /^([^#.0-9]*)([#,.0-9]*)([^#0-9]*)$/
-const DECIMAL_PATTERN: RegExp = /^((?:#*(?:,#+)*)\d*(?:,\d+)*)?(\.(?:\d+#*|#+))?$/
-
 const defineInteger = (pattern: string, meta: DecimalMetadata): void => {
   if (!pattern) {
     meta.integer.max = 0
@@ -33,13 +30,18 @@ const defineFaction = (pattern: string, meta: DecimalMetadata): void => {
     meta.fraction.fill = fill
 }
 
-export default (input: Element) => {
+const compilePattern = (pattern: string): string[] => {
+  const part = /^([^\d#.]*)([\d#,.]*)([^\d]*)$/.exec(pattern)
+  if (part && /^((?:#*(?:,#+)*)\d*(?:,\d+)*)?(\.(?:\d+#*|#+))?$/.test(part[2]))
+    return [...part.slice(1)]
+
+  throw new Error(`illegal numeric pattern "${pattern}"`)
+}
+
+export default (input: Element): DecimalMetadata => {
   const pattern = input.getAttribute('data-pattern') || ''
 
-  const [, prefix, decimalPattern, suffix] = PRINT_PATTERN.exec(pattern)
-
-  if (!DECIMAL_PATTERN.test(decimalPattern))
-    throw `illegal numeric pattern "${decimalPattern}"`
+  const [prefix, decimalPattern, suffix] = compilePattern(pattern)
 
   const meta: DecimalMetadata = {
     prefix,
@@ -55,11 +57,9 @@ export default (input: Element) => {
     }
   }
 
-  if (pattern) {
-    const [integerPart, fractionPart] = decimalPattern.split('.')
-    defineInteger(integerPart, meta)
-    defineFaction(fractionPart, meta)
-  }
+  const [integerPart, fractionPart] = decimalPattern.split('.')
+  defineInteger(integerPart, meta)
+  defineFaction(fractionPart, meta)
 
   return meta
 }
