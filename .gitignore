@@ -2,3 +2,4 @@ node_modules
 .firebase
 .vscode
 .idea
+.coveralls.yml
