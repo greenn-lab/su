@@ -23,5 +23,6 @@ module.exports = {
             filename: 'index.html'
         })
     ],
-    devtool: 'source-map'
+    mode: "development",
+    devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'hidden-source-map'
 }
