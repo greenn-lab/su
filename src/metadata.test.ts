@@ -27,7 +27,7 @@ describe('metadata tests', () => {
 
     // THEN
     expect(meta.integer.max).toEqual(4)
-    expect(meta.integer.groups).toEqual(3)
+    expect(meta.integer.groups).toEqual(1)
     expect(meta.integer.fill).toEqual('0')
 
     expect(meta.fraction.max).toEqual(3)
