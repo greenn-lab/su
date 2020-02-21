@@ -2,6 +2,7 @@ const ACCEPT_KEYS: readonly string[] = [
   'Enter',
   'Backspace',
   'Delete',
+  'Shift',
   'Home',
   'End',
   'ArrowLeft',
@@ -15,7 +16,7 @@ const ACCEPT_KEYS: readonly string[] = [
 const accepts = (key: string): boolean => ACCEPT_KEYS.indexOf(key) > -1
 
 export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata) => {
-  const { key } = e
+  const { key: string } = e
   const cursor: number = input.selectionStart || 0
 
   if (/\d/.test(key)) {
