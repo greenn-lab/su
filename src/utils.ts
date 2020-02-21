@@ -1,5 +1,7 @@
 export const toNumber = (text: string): string => text.replace(/[^\d-.]/g, '')
 
+export const isMinus = (value: string): boolean => /^-/.test(value)
+
 const groupRegExps: { [key: number]: RegExp } = {}
 export const grouping = (integer: string | number, group: number = 3): string => {
   if (!integer) return ''

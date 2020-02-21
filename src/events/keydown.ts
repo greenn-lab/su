@@ -16,7 +16,7 @@ const accepts = (key: string): boolean => ACCEPT_KEYS.indexOf(key) > -1
 
 export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata) => {
   const { key } = e
-  const cursor: number = input.selectionStart as number
+  const cursor: number = input.selectionStart || 0
 
   if (/\d/.test(key)) {
     if (!meta.unlimited) {

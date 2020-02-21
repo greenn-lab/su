@@ -1,17 +1,13 @@
+import registerNumberFormatter from './registerInput'
 import metadata from './metadata'
-import keydown from './events/keydown'
-import focus from './events/focus'
-import formatting from './events/formatting'
-
-import './custom-event-for-ie11'
 
 document.addEventListener('DOMContentLoaded', () => {
   const changeEvent = new (typeof Event === 'function' ? Event : CustomEvent)('change')
 
   // <input class="su" ...> 들을 찾는데,
   // 이미 적용된(su--dyed) 건 제외하고 찾아요.
-  Array.prototype.forEach.call(document.querySelectorAll('input.su:not(.su--dyed)'), input => {
-    register(input, metadata(input))
+  Array.prototype.forEach.call(document.querySelectorAll('input.su:not(.su--dyed)'), (input) => {
+    registerNumberFormatter(input, metadata(input))
 
     // 초기에 값이 할당된 경우, change 이벤트를 호출해서
     // 값을 정의된 패턴에 맞게 formatting 해줘요.
@@ -20,69 +16,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 })
-
-const register = (input: HTMLInputElement, meta: DecimalMetadata): void => {
-  input.addEventListener(
-    'keydown',
-    (e: KeyboardEvent) => keydown(e, input, meta),
-    false,
-  )
-
-  input.addEventListener(
-    'input',
-    (e: Event) => {
-      console.log('input', input.value, e)
-    },
-    false,
-  )
-
-  //
-  // input.addEventListener(
-  //   'keydown',
-  //   (e: KeyboardEvent) => {
-  //     console.log('keydown', e.key, input.value)
-  //     input.readOnly = true
-  //     e.preventDefault()
-  //   },
-  //   false)
-  //
-  // input.addEventListener(
-  //   'keypress',
-  //   (e: KeyboardEvent) => {
-  //     console.log('keypress', e.key, input.value)
-  //     input.readOnly = false
-  //     e.preventDefault()
-  //   },
-  //   false)
-  //
-  // input.addEventListener(
-  //   'keyup',
-  //   (e: KeyboardEvent) => {
-  //     console.log('keyup', e.key, input.value)
-  //     input.readOnly = false
-  //   },
-  //   false)
-
-
-  input.addEventListener(
-    'focus',
-    () => focus(input, meta),
-    false,
-  )
-
-  input.addEventListener(
-    'focusout',
-    (e: Event) => formatting(e, input, meta),
-    false,
-  )
-
-  // 적용된 형태로 명시하고, 숫자를 위한 정렬 스타일을 적용해요.
-  input.classList.add('su--dyed')
-  input.style.textAlign = 'right'
-
-  // <input type=number...> 의 경우,
-  // setSelectionRange 함수등이 동작하지 않아요.
-  if (input.getAttribute('type') === 'number') {
-    input.setAttribute('type', 'text')
-  }
-}

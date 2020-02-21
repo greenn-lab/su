@@ -12,7 +12,9 @@ export default (input: HTMLInputElement, meta: DecimalMetadata) => {
 
   input.value = toNumber(input.value)
 
-  if (/^-/.test(input.value)) { cursor++ }
+  if (/^-/.test(input.value)) {
+    cursor++
+  }
 
   setTimeout(() => {
     input.setSelectionRange(cursor, cursor)

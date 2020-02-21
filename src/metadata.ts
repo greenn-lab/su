@@ -9,22 +9,26 @@ const defineInteger = (number: string, info: DecimalMetadata): void => {
     info.integer.groups = groupPosition
   }
 
-  const [all, /*mutable*/, immutable] = /^(#*)(\d*)$/.exec(number.replace(/[^#0-9]/g, ''))
-  if (all)
+  const [all, /* ignore */, immutable] = /^(#*)(\d*)$/.exec(number.replace(/[^#0-9]/g, ''))
+  if (all) {
     info.integer.max = all.length
+  }
 
-  if (immutable)
+  if (immutable) {
     info.integer.fill = immutable
+  }
 }
 const defineFaction = (number: string, info: DecimalMetadata): void => {
   if (!number) return
 
   const [all, immutable] = /^(\d*)(#*)$/.exec(number.replace(/[^#0-9]/g, ''))
-  if (all)
+  if (all) {
     info.fraction.max = all.length
+  }
 
-  if (immutable)
+  if (immutable) {
     info.fraction.fill = immutable
+  }
 }
 
 export default (input: Element) => {
@@ -32,8 +36,9 @@ export default (input: Element) => {
 
   const [, prefix, decimalPattern, suffix] = PRINT_PATTERN.exec(pattern)
 
-  if (!DECIMAL_PATTERN.test(decimalPattern))
-    throw `illegal numeric pattern "${decimalPattern}"`
+  if (!DECIMAL_PATTERN.test(decimalPattern)) {
+    throw Error(`illegal numeric pattern "${decimalPattern}"`)
+  }
 
   const meta: DecimalMetadata = {
     unlimited: !pattern,
