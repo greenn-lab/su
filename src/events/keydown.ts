@@ -15,7 +15,7 @@ const ACCEPT_KEYS: readonly string[] = [
 const accepts = (key: string): boolean => ACCEPT_KEYS.indexOf(key) > -1
 
 export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata) => {
-  const key: string = e.key
+  const { key } = e
   const cursor: number = input.selectionStart as number
 
   if (/\d/.test(key)) {
@@ -28,16 +28,11 @@ export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata
         if (meta.integer.max <= integer.replace(/^-/, '').length) {
           e.preventDefault()
         }
-      }
-      // 소수값을 입력 할 때
-      else {
-        // 소수 패턴의 최대 길이보다 크면 차단
-        if (meta.fraction.max <= fraction.length) {
-          e.preventDefault()
-        }
+      } else if (meta.fraction.max <= fraction.length) { // 소수값을 입력 할 때, 소수 패턴의 최대 길이보다 크면 차단
+        e.preventDefault()
       }
     }
-  } else if ('.' === key) {
+  } else if (key === '.') {
     if (!meta.unlimited && meta.fraction.max === 0) {
       e.preventDefault()
       return
@@ -51,17 +46,17 @@ export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata
         const value = input.value.replace(/\./, '')
 
         if (cursor > dotIndex) {
-          input.value = value.substring(0, cursor - 1) + '.' + value.substring(cursor - 1)
+          input.value = `${value.substring(0, cursor - 1)}.${value.substring(cursor - 1)}`
           input.setSelectionRange(cursor, cursor)
         } else {
-          input.value = value.substring(0, cursor) + '.' + value.substring(cursor)
+          input.value = `${value.substring(0, cursor)}.${value.substring(cursor)}`
           input.setSelectionRange(cursor + 1, cursor + 1)
         }
       })
     }
   } else if (/^(Arrow)?(Up|Down)$/.test(key)) {
-    const value = Number(input.value),
-      dotIndex = input.value.indexOf('.')
+    const value = Number(input.value)
+    const dotIndex = input.value.indexOf('.')
 
     input.value = (value + (/Up$/.test(key) ? 1 : -1))
       .toFixed(dotIndex === -1
@@ -69,24 +64,26 @@ export default (e: KeyboardEvent, input: HTMLInputElement, meta: DecimalMetadata
         : input.value.length - dotIndex - 1)
 
     setTimeout(() => input.setSelectionRange(cursor, cursor))
-  } else if ('-' === key) {
+  } else if (key === '-') {
     e.preventDefault()
 
     if (/^-/.test(input.value)) {
       input.value = input.value.replace(/-/, '')
       input.setSelectionRange(cursor - 1, cursor - 1)
     } else {
-      input.value = '-' + input.value
+      input.value = `-${input.value}`
       input.setSelectionRange(cursor + 1, cursor + 1)
     }
   } else if (!e.ctrlKey && !e.metaKey && !e.altKey && !accepts(key)) {
+    e.preventDefault()
+
     const fired = () => {
       input.value = input.value.replace(/[^\d-.]/g, '')
       input.removeEventListener('keyup', fired)
 
       setTimeout(() => {
-        const cursor = meta.cursor || 0
-        input.setSelectionRange(cursor, cursor)
+        const lastSelectedCursor = meta.cursor || 0
+        input.setSelectionRange(lastSelectedCursor, lastSelectedCursor)
         input.readOnly = false
       })
     }

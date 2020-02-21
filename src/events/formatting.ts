@@ -1,4 +1,6 @@
-import {fillFraction, fillInteger, grouping, toNumber} from '../utils'
+import {
+  fillFraction, fillInteger, grouping, toNumber,
+} from '../utils'
 
 const isMinus = (value: string): boolean => /^-/.test(value)
 
@@ -10,8 +12,7 @@ export default (e: Event, input: HTMLInputElement, meta: DecimalMetadata) => {
   const point = value.indexOf('.')
 
   if (point === -1) {
-    input.value = fillInteger(grouping(value), meta.integer.fill)
-      + fillFraction('', meta.fraction.fill)
+    input.value = fillInteger(grouping(value), meta.integer.fill) + fillFraction('', meta.fraction.fill)
   } else {
     input.value = fillInteger(grouping(value.substring(0, point)), meta.integer.fill)
     input.value += fillFraction(toNumber(value.substring(point + 1)), meta.fraction.fill)
@@ -19,6 +20,7 @@ export default (e: Event, input: HTMLInputElement, meta: DecimalMetadata) => {
 
   input.value = meta.prefix + input.value + meta.suffix
 
-  if (minus)
-    input.value = '-' + input.value
+  if (minus) {
+    input.value = `-${input.value}`
+  }
 }
