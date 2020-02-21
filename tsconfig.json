@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
+    "strict": true,
     "target": "es5",
-    "noImplicitAny": true,
     "lib": [
+      "es5",
       "es6",
       "esnext",
       "dom"
     ],
-    "strict": true,
     "module": "es6",
-    "moduleResolution": "node",
     "downlevelIteration": true,
+    "declaration": true,
+    "declarationDir": "dist",
     "sourceMap": true,
     "typeRoots": [
-      "./@types",
+      "./types",
       "./node_modules/@types"
     ],
     "outDir": "dist"
   },
   "include": [
-    "./src/**.ts",
-    "./@types/*.ts"
+    "./src/**/*.ts",
+    "./types/**/*.ts"
   ]
 }
