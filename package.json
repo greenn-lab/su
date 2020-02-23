@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
-    "serve": "webpack-dev-server --mode development"
+    "serve": "webpack-dev-server --mode development",
+    "coveralls": "jest --coverage --coverageReporters=text-lcov | coveralls"
   },
   "keywords": [
     "input only number",

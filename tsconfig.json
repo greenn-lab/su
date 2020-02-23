@@ -10,8 +10,8 @@
     ],
     "module": "es6",
     "downlevelIteration": true,
-    "declaration": true,
-    "declarationDir": "dist",
+    //    "declaration": true,
+    //    "declarationDir": "dist",
     "sourceMap": true,
     "typeRoots": [
       "./types",

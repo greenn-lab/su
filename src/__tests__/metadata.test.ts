@@ -1,8 +1,4 @@
-/**
- * @jest-environment jsdom
- */
-
-import metadata from './metadata'
+import metadata from '../metadata'
 
 describe('metadata tests', () => {
   it('wrong pattern', () => {
